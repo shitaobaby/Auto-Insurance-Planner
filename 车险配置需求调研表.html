@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>车险配置需求调研表</title>
+<!-- 样式优化 -->
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #formContainer {
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  h2 {
+    margin-top: 30px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 8px;
+    font-size: 1.2em;
+    color: #333;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .inline-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 5px;
+  }
+  .inline-group label {
+    font-weight: normal;
+  }
+  button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: background-color 0.3s;
+  }
+  #btnExcel {
+    background-color: #28a745;
+    color: #fff;
+  }
+  #btnExcel:hover {
+    background-color: #218838;
+  }
+  #btnWord {
+    background-color: #007bff;
+    color: #fff;
+  }
+  #btnWord:hover {
+    background-color: #0069d9;
+  }
+  #btnMarkdown {
+    background-color: #ffc107;
+    color: #333;
+  }
+  #btnMarkdown:hover {
+    background-color: #e0a800;
+  }
+  #outputContainer {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  #markdownOutput {
+    white-space: pre-wrap;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 30px;
+  }
+</style>
+<!-- 引入必要库 -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx/dist/docx.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver/dist/FileSaver.min.js"></script>
+</head>
+<body>
+
+<h1>🚗 车险配置需求调研表导出</h1>
+
+<div id="formContainer">
+  <form id="surveyForm">
+    <!-- 车辆基本信息 -->
+    <h2>🚗 车辆基本信息</h2>
+    <label>品牌型号：</label>
+    <input type="text" name="carModel" placeholder="例如：日产逍客2017款 2.0L CVT智享版" />
+
+    <label>购车价格（万元）：</label>
+    <input type="number" name="purchasePrice" min="0" step="0.1" />
+
+    <label>车龄（年）：</label>
+    <input type="number" name="carAge" min="0" />
+
+    <label>年行驶里程（公里）：</label>
+    <input type="number" name="mileage" min="0" />
+
+    <label>车辆用途：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="usage" value="家庭自用" checked />家庭自用</label>
+      <label><input type="radio" name="usage" value="偶尔商务" />偶尔商务</label>
+      <label><input type="radio" name="usage" value="其他" />其他</label>
+    </div>
+    <input type="text" name="usageOther" placeholder="请填写其他用途" />
+
+    <!-- 用车环境 -->
+    <h2>🏙️ 用车环境</h2>
+    <label>主要行驶区域：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="area" value="一线城市" checked />一线城市</label>
+      <label><input type="radio" name="area" value="二线城市" />二线城市</label>
+      <label><input type="radio" name="area" value="三四线城市" />三四线城市</label>
+    </div>
+
+    <label>具体城市：</label>
+    <input type="text" name="city" placeholder="例如：北京、上海" />
+
+    <label>停车环境：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="parking" value="地下车库" checked />地下车库</label>
+      <label><input type="radio" name="parking" value="露天停车场" />露天停车场</label>
+      <label><input type="radio" name="parking" value="路边停车" />路边停车</label>
+      <label><input type="radio" name="parking" value="其他" />其他</label>
+    </div>
+    <input type="text" name="parkingOther" placeholder="请填写其他停车环境" />
+
+    <label>行驶路况：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="road" value="市区为主" checked />市区为主</label>
+      <label><input type="radio" name="road" value="高速较多" />高速较多</label>
+      <label><input type="radio" name="road" value="城乡结合" />城乡结合</label>
+      <label><input type="radio" name="road" value="山区道路" />山区道路</label>
+    </div>
+
+    <!-- 家庭用车情况 -->
+    <h2>👨‍👩‍👧‍👦 家庭用车情况</h2>
+    <label>主要驾驶人驾龄（年）：</label>
+    <input type="number" name="driverExperience" min="0" />
+
+    <label>常载人员：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="passengers" value="仅驾驶员" checked />仅驾驶员</label>
+      <label><input type="radio" name="passengers" value="夫妻二人" />夫妻二人</label>
+      <label><input type="radio" name="passengers" value="带小孩" />带小孩</label>
+      <label><input type="radio" name="passengers" value="带老人" />带老人</label>
+    </div>
+
+    <label>通常载客数：</label>
+    <input type="number" name="usualPassengers" min="0" />
+
+    <label>最多载客数：</label>
+    <input type="number" name="maxPassengers" min="0" />
+
+    <label>出行频率：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="frequency" value="每天" />每天</label>
+      <label><input type="radio" name="frequency" value="工作日" />工作日</label>
+      <label><input type="radio" name="frequency" value="周末" />周末</label>
+      <label><input type="radio" name="frequency" value="偶尔" />偶尔</label>
+    </div>
+
+    <!-- 预算与风险偏好 -->
+    <h2>💰 预算与风险偏好</h2>
+    <label>年保费预算（元，下限）：</label>
+    <input type="number" name="minBudget" min="0" />
+
+    <label>年保费预算（元，上限）：</label>
+    <input type="number" name="maxBudget" min="0" />
+
+    <label>风险承受能力：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="risk" value="保守型（全面保障）" />保守型（全面保障）</label>
+      <label><input type="radio" name="risk" value="平衡型（重点保障）" />平衡型（重点保障）</label>
+      <label><input type="radio" name="risk" value="激进型（基础保障）" />激进型（基础保障）</label>
+    </div>
+
+    <label>自付能力（小额损失 5000 元以下）：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="selfPay" value="能接受自付" />能接受自付</label>
+      <label><input type="radio" name="selfPay" value="希望全赔" />希望全赔</label>
+    </div>
+
+    <!-- 特殊需求 -->
+    <h2>🎯 特殊需求</h2>
+    <label>是否需要代步车服务：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="代步车" value="需要" />需要</label>
+      <label><input type="radio" name="代步车" value="不需要" />不需要</label>
+    </div>
+
+    <label>是否经常跑高速：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="highway" value="是" />是</label>
+      <input type="number" name="highwayTimes" placeholder="月次数以上" min="0" />
+      <label><input type="radio" name="highway" value="否" />否</label>
+    </div>
+
+    <label>是否有营运需求：</label>
+    <div class="inline-group">
+      <label><input type="radio" name="operation" value="网约车" />网约车</label>
+      <label><input type="radio" name="operation" value="货运" />货运</label>
+      <label><input type="radio" name="operation" value="纯家用" />纯家用</label>
+    </div>
+
+    <label>近 3 年出险次数：</label>
+    <input type="number" name="accidentTimes" min="0" />
+
+    <label>近 3 年最大赔付（元）：</label>
+    <input type="number" name="maxCompensation" min="0" />
+
+    <!-- 关注重点 -->
+    <h2>🔍 关注重点（可多选）</h2>
+    <div class="inline-group">
+      <label><input type="checkbox" name="concern" value="第三方人伤高额赔付保障" />第三方人伤高额赔付保障</label>
+      <label><input type="checkbox" name="concern" value="自车维修费用保障" />自车维修费用保障</label>
+      <label><input type="checkbox" name="concern" value="车内人员安全保障" />车内人员安全保障</label>
+      <label><input type="checkbox" name="concern" value="盗抢/自然灾害保障" />盗抢/自然灾害保障</label>
+      <label><input type="checkbox" name="concern" value="降低保费成本" />降低保费成本</label>
+      <label><input type="checkbox" name="concern" value="增值服务（道路救援等）" />增值服务（道路救援等）</label>
+    </div>
+
+    <!-- 其他补充信息 -->
+    <h2>📞 其他补充信息</h2>
+    <label>特殊情况说明：</label>
+    <textarea name="specialSituation" rows="3" placeholder="补充特殊情况或需求"></textarea>
+
+    <label>最关心的保险问题：</label>
+    <textarea name="concernedQuestion" rows="3" placeholder="请填写您最关心的问题"></textarea>
+  </form>
+</div>
+
+<!-- 按钮区域 -->
+<div style="text-align:center;">
+  <button id="btnExcel" onclick="exportExcel()">导出为Excel</button>
+  <button id="btnMarkdown" onclick="exportMarkdown()">导出为Markdown</button>
+</div>
+
+<script>
+  // 获取表单数据
+function getFormData() {
+  const form = document.getElementById('surveyForm');
+  const data = {};
+  new FormData(form).forEach((value, key) => {
+    if (data[key]) {
+      // 多选
+      if (Array.isArray(data[key])) {
+        data[key].push(value);
+      } else {
+        data[key] = [data[key], value];
+      }
+    } else {
+      data[key] = value;
+    }
+  });
+  return data;
+}
+
+// 导出Excel
+function exportExcel() {
+  const data = getFormData();
+  const sheetData = [
+    ['字段', '内容'],
+    ['车型', data.carModel || ''],
+    ['购车价格（万元）', data.purchasePrice || ''],
+    ['车龄（年）', data.carAge || ''],
+    ['年行驶里程（公里）', data.mileage || ''],
+    ['车辆用途', data.usage || ''],
+    ['其他用途', data.usageOther || ''],
+    ['主要行驶区域', data.area || ''],
+    ['具体城市', data.city || ''],
+    ['停车环境', data.parking || ''],
+    ['其他停车环境', data.parkingOther || ''],
+    ['行驶路况', data.road || ''],
+    ['主要驾驶人驾龄（年）', data.driverExperience || ''],
+    ['常载人员', data.passengers || ''],
+    ['通常载客数', data.usualPassengers || ''],
+    ['最多载客数', data.maxPassengers || ''],
+    ['出行频率', data.frequency || ''],
+    ['年保费预算（元）', data.minBudget || ''],
+    ['年保费上限（元）', data.maxBudget || ''],
+    ['风险承受能力', data.risk || ''],
+    ['自付能力', data.selfPay || ''],
+    ['是否需要代步车', data.代步车 || ''],
+    ['是否经常跑高速', data.highway || ''],
+    ['高速月次数', data.highwayTimes || ''],
+    ['营运需求', data.operation || ''],
+    ['出险次数（近3年）', data.accidentTimes || ''],
+    ['最大赔付（元）', data.maxCompensation || ''],
+    ['关注重点', (data.concern || []).join('、')],
+    ['特殊情况说明', data.specialSituation || ''],
+    ['最关心的问题', data.concernedQuestion || '']
+  ];
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+  XLSX.utils.book_append_sheet(wb, ws, '调研数据');
+  XLSX.writeFile(wb, '车险调研数据.xlsx');
+}
+
+// 导出Markdown
+function exportMarkdown() {
+  const data = getFormData();
+  // 字段与标题
+  const fields = [
+    ['车型', data.carModel || ''],
+    ['购车价格（万元）', data.purchasePrice || ''],
+    ['车龄（年）', data.carAge || ''],
+    ['年行驶里程（公里）', data.mileage || ''],
+    ['车辆用途', data.usage || ''],
+    ['其他用途', data.usageOther || ''],
+    ['主要行驶区域', data.area || ''],
+    ['具体城市', data.city || ''],
+    ['停车环境', data.parking || ''],
+    ['其他停车环境', data.parkingOther || ''],
+    ['行驶路况', data.road || ''],
+    ['主要驾驶人驾龄（年）', data.driverExperience || ''],
+    ['常载人员', data.passengers || ''],
+    ['通常载客数', data.usualPassengers || ''],
+    ['最多载客数', data.maxPassengers || ''],
+    ['出行频率', data.frequency || ''],
+    ['年保费预算（元，下限）', data.minBudget || ''],
+    ['年保费预算（元，上限）', data.maxBudget || ''],
+    ['风险承受能力', data.risk || ''],
+    ['自付能力', data.selfPay || ''],
+    ['是否需要代步车', data.代步车 || ''],
+    ['是否经常跑高速', data.highway || ''],
+    ['高速月次数', data.highwayTimes || ''],
+    ['营运需求', data.operation || ''],
+    ['出险次数（近3年）', data.accidentTimes || ''],
+    ['最大赔付（元）', data.maxCompensation || ''],
+    ['关注重点', (data.concern || []).join('、')],
+    ['特殊情况说明', data.specialSituation || ''],
+    ['最关心的问题', data.concernedQuestion || '']
+  ];
+
+  let md = `# 车险配置需求调研表\n\n`;
+  md += `| 字段 | 内容 |\n| --- | --- |\n`;
+  fields.forEach(([k, v]) => {
+    // 转义竖线
+    v = (v + '').replace(/\|/g, '\\|');
+    md += `| ${k} | ${v} |\n`;
+  });
+
+  // 下载
+  const blob = new Blob([md], {type: 'text/markdown'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '车险调研数据.md';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// 绑定按钮事件
+document.getElementById('btnExcel').onclick = exportExcel;
+document.getElementById('btnMarkdown').onclick = exportMarkdown;
+</script>
+
+</body>
+</html>
