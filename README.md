@@ -1,3 +1,5 @@
+<a name="readme-top"></a>
+
 # 🚗 车险配置工具
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 
@@ -86,3 +88,9 @@
 
 ## 📜 许可证
 本项目采用 [MIT License](https://github.com/shitaobaby/CarInsuranceOptimizer/blob/main/LICENSE) 开源许可证 - 允许商业使用、修改和分发，但需保留原作者声明和许可证文件。
+
+<p align="right" style="font-size: 14px; color: #555; margin-top: 20px;">
+    <a href="#readme-top" style="text-decoration: none; color: #007bff; font-weight: bold;">
+        🔝回到顶部🔝
+    </a>
+</p>
