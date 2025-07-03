@@ -65,11 +65,11 @@
 ## 🚀 如何使用
 
 1.  **打开问卷**:
-    * 普通车: `燃油汽车保险配置需求调研表.html`
-    * 新能源车: `新能源汽车保险配置需求调研表.html`
+    * 普通车: `FuelVehicleInsuranceSurvey.html`
+    * 新能源车: `NewEnergyVehicleInsuranceSurvey.html`
 2.  **填写信息**: 认真填写问卷中的各项内容。
 3.  **导出数据**: 点击页面上的“导出为Excel”或“导出为Markdown”按钮，保存你的填写结果。
-4.  **参考方案**: 根据导出的需求信息，对照 `燃油机动车保险配置方案.md` 或 `新能源机动车保险配置方案.md` 选择适合你的保险方案。
+4.  **参考方案**: 根据导出的需求信息，对照 `FuelVehicleInsurancePlan.md` 或 `NewEnergyVehicleInsurancePlan.md` 选择适合你的保险方案。
 
 ## 💡 注意事项与常见误区
 
